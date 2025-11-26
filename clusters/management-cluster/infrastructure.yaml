@@ -25,3 +25,15 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure/capi-docker
+  # --- AJOUTER À PARTIR D'ICI ---
+  postBuild:
+    substitute:
+      # Active la topologie de cluster (ClusterClass), essentiel pour la suite
+      CLUSTER_TOPOLOGY: "true"
+      # Valeurs par défaut pour les autres variables
+      EXP_MACHINE_POOL: "false"
+      EXP_CLUSTER_RESOURCE_SET: "false"
+      EXP_RUNTIME_SDK: "false"
+      EXP_MACHINE_SET_PREFLIGHT_CHECKS: "false"
+      CAPI_DIAGNOSTICS_ADDRESS: ":8443"
+      CAPI_INSECURE_DIAGNOSTICS: "false"
