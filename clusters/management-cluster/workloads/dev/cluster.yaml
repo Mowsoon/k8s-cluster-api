@@ -1,5 +1,3 @@
-# Cluster DEV : 1 Control Plane, 1 Worker
-# Namespace : env-dev
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
@@ -29,7 +27,7 @@ kind: DockerCluster
 metadata:
   name: cluster-dev-v2
   namespace: env-dev
-spec: 
+spec:
   controlPlaneEndpoint:
     host: ""
     port: 6443
@@ -41,7 +39,7 @@ metadata:
   namespace: env-dev
 spec:
   version: v1.28.0
-  replicas: 1 
+  replicas: 1
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
@@ -55,9 +53,13 @@ spec:
     initConfiguration:
       nodeRegistration:
         criSocket: /var/run/containerd/containerd.sock
+        ignorePreflightErrors:
+          - SystemVerification
     joinConfiguration:
       nodeRegistration:
         criSocket: /var/run/containerd/containerd.sock
+        ignorePreflightErrors:
+          - SystemVerification
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
@@ -68,9 +70,9 @@ spec:
   template:
     spec:
       extraMounts:
-          - containerPath: /lib/modules
-            hostPath: /lib/modules
-            readOnly: true
+        - containerPath: /lib/modules
+          hostPath: /lib/modules
+          readOnly: true
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -79,7 +81,7 @@ metadata:
   namespace: env-dev
 spec:
   clusterName: cluster-dev-v2
-  replicas: 1 
+  replicas: 1
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: cluster-dev-v2
@@ -107,11 +109,11 @@ metadata:
   namespace: env-dev
 spec:
   template:
-    spec: 
+    spec:
       extraMounts:
-          - containerPath: /lib/modules
-            hostPath: /lib/modules
-            readOnly: true
+        - containerPath: /lib/modules
+          hostPath: /lib/modules
+          readOnly: true
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
@@ -124,3 +126,5 @@ spec:
       joinConfiguration:
         nodeRegistration:
           criSocket: /var/run/containerd/containerd.sock
+          ignorePreflightErrors:
+            - SystemVerification

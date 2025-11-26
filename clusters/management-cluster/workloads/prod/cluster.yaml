@@ -27,7 +27,7 @@ kind: DockerCluster
 metadata:
   name: cluster-prod
   namespace: env-prod
-spec: 
+spec:
   controlPlaneEndpoint:
     host: ""
     port: 6443
@@ -53,22 +53,26 @@ spec:
     initConfiguration:
       nodeRegistration:
         criSocket: /var/run/containerd/containerd.sock
+        ignorePreflightErrors:
+          - SystemVerification
     joinConfiguration:
       nodeRegistration:
         criSocket: /var/run/containerd/containerd.sock
+        ignorePreflightErrors:
+          - SystemVerification
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-prod-v2-control-plane
+  name: cluster-prod-control-plane
   namespace: env-prod
 spec:
   template:
-    spec: 
+    spec:
       extraMounts:
-          - containerPath: /lib/modules
-            hostPath: /lib/modules
-            readOnly: true
+        - containerPath: /lib/modules
+          hostPath: /lib/modules
+          readOnly: true
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -105,11 +109,11 @@ metadata:
   namespace: env-prod
 spec:
   template:
-    spec: 
+    spec:
       extraMounts:
-          - containerPath: /lib/modules
-            hostPath: /lib/modules
-            readOnly: true
+        - containerPath: /lib/modules
+          hostPath: /lib/modules
+          readOnly: true
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
@@ -122,3 +126,5 @@ spec:
       joinConfiguration:
         nodeRegistration:
           criSocket: /var/run/containerd/containerd.sock
+          ignorePreflightErrors:
+            - SystemVerification
