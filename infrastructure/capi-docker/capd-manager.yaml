@@ -233,5 +233,5 @@ roleRef:
   name: capd-manager-role
 subjects:
   - kind: ServiceAccount
-    name: capd-manager  
+    name: capd-manager
     namespace: capd-system
