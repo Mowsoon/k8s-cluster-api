@@ -96,7 +96,7 @@ spec:
         - --metrics-bind-addr=127.0.0.1:8080
         - --webhook-port=9443
         - --webhook-cert-dir=/tmp/k8s-webhook-server/serving-certs/
-        image: gcr.io/k8s-staging-cluster-api/capd-manager:v1.6.0
+        image: gcr.io/k8s-staging-cluster-api/capd-manager:v1.7.0
         name: manager
         securityContext:
           privileged: true
