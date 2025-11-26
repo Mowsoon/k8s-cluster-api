@@ -208,6 +208,7 @@ rules:
       - machines/status
       - machinepools
       - machinepools/status
+      - machinesets
     verbs:
       - get
       - list
