@@ -60,11 +60,15 @@ spec:
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-prod-control-plane
+  name: cluster-prod-v2-control-plane
   namespace: env-prod
 spec:
   template:
-    spec: {}
+    spec: 
+      extraMounts:
+          - containerPath: /lib/modules
+            hostPath: /lib/modules
+            readOnly: true
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
