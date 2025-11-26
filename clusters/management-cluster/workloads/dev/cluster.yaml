@@ -44,7 +44,7 @@ spec:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
       kind: DockerMachineTemplate
-      name: cluster-dev-v2-control-plane
+      name: cluster-dev-v2-control-plane-clean  # <--- NOUVEAU NOM
   kubeadmConfigSpec:
     clusterConfiguration:
       controllerManager:
@@ -61,11 +61,10 @@ spec:
         ignorePreflightErrors:
           - SystemVerification
 ---
-# PLUS D'EXTRA MOUNTS ICI
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-dev-v2-control-plane
+  name: cluster-dev-v2-control-plane-clean
   namespace: env-dev
 spec:
   template:
@@ -97,12 +96,12 @@ spec:
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: DockerMachineTemplate
-        name: cluster-dev-v2-md-0
+        name: cluster-dev-v2-md-0-clean
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-dev-v2-md-0
+  name: cluster-dev-v2-md-0-clean
   namespace: env-dev
 spec:
   template:
