@@ -10,3 +10,6 @@ resources:
   - https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/v1.6.0/test/infrastructure/docker/config/crd/bases/infrastructure.cluster.x-k8s.io_dockermachines.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/v1.6.0/test/infrastructure/docker/config/crd/bases/infrastructure.cluster.x-k8s.io_dockermachinetemplates.yaml
   - https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/v1.6.0/test/infrastructure/docker/config/crd/bases/infrastructure.cluster.x-k8s.io_dockermachinepools.yaml
+
+commonLabels:
+  cluster.x-k8s.io/v1beta1: v1beta1
