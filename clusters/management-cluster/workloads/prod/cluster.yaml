@@ -105,7 +105,11 @@ metadata:
   namespace: env-prod
 spec:
   template:
-    spec: {}
+    spec: 
+      extraMounts:
+          - containerPath: /lib/modules
+            hostPath: /lib/modules
+            readOnly: true
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
