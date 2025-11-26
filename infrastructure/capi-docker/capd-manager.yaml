@@ -3,13 +3,14 @@ kind: Namespace
 metadata:
   name: capd-system
 ---
+# 1. Le ServiceAccount 
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: capd-manager
   namespace: capd-system
----  
-# 1. Le certificat
+---
+# 2. Certificats pour le Webhook
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -35,7 +36,7 @@ spec:
     organizations:
     - k8s.io
 ---
-# 2. Les Services
+# 3. Services (Metrics & Webhook)
 apiVersion: v1
 kind: Service
 metadata:
@@ -67,7 +68,7 @@ spec:
     cluster.x-k8s.io/provider: infrastructure-docker
     control-plane: controller-manager
 ---
-# 3. Le Déploiement
+# 4. Le Deployment 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -88,7 +89,7 @@ spec:
         cluster.x-k8s.io/provider: infrastructure-docker
         control-plane: controller-manager
     spec:
-      serviceAccountName: capd-manager
+      serviceAccountName: capd-manager # <--- IMPORTANT : Utilise le compte créé plus haut
       containers:
       - args:
         - --leader-elect
@@ -117,9 +118,9 @@ spec:
       - name: cert
         secret:
           defaultMode: 420
-          secretName: capd-webhook-service-cert         
+          secretName: capd-webhook-service-cert
 ---
-# 4. Les Rôles et RoleBindings
+# 5. Droits RBAC : Leader Election (Role local)
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -172,6 +173,7 @@ subjects:
   name: capd-manager
   namespace: capd-system
 ---
+# 6. Droits RBAC : Manager Global (ClusterRole)
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -201,8 +203,11 @@ rules:
       - cluster.x-k8s.io
     resources:
       - clusters
+      - clusters/status
       - machines
+      - machines/status
       - machinepools
+      - machinepools/status
     verbs:
       - get
       - list
@@ -228,5 +233,5 @@ roleRef:
   name: capd-manager-role
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: capd-manager  
     namespace: capd-system
