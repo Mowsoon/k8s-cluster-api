@@ -8,7 +8,7 @@ metadata:
 spec:
   clusterNetwork:
     services:
-      cidrBlocks: ["10.100.0.0/16"] # CIDR différent pour éviter les confusions
+      cidrBlocks: ["10.100.0.0/16"]
     pods:
       cidrBlocks: ["192.168.0.0/16"]
     serviceDomain: "cluster.local"
@@ -68,7 +68,7 @@ metadata:
   namespace: env-dev
 spec:
   clusterName: cluster-dev
-  replicas: 1 # Economique
+  replicas: 1 
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: cluster-dev
