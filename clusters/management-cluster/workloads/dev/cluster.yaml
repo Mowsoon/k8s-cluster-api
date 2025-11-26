@@ -29,6 +29,10 @@ kind: DockerCluster
 metadata:
   name: cluster-dev-v2
   namespace: env-dev
+spec: 
+  controlPlaneEndpoint:
+    host: ""
+    port: 6443
 ---
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
