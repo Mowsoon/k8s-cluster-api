@@ -164,3 +164,62 @@ subjects:
 - kind: ServiceAccount
   name: default
   namespace: capd-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: capd-manager-role
+  labels:
+    cluster.x-k8s.io/provider: infrastructure-docker
+rules:
+  - apiGroups:
+      - infrastructure.cluster.x-k8s.io
+    resources:
+      - dockerclusters
+      - dockerclusters/status
+      - dockermachines
+      - dockermachines/status
+      - dockermachinetemplates
+      - dockermachinepools
+      - dockermachinepools/status
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - cluster.x-k8s.io
+    resources:
+      - clusters
+      - machines
+      - machinepools
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: capd-manager-rolebinding
+  labels:
+    cluster.x-k8s.io/provider: infrastructure-docker
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: capd-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: capd-system
