@@ -1,0 +1,29 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cluster-dev
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  prune: true
+  dependsOn:
+    - name: capi-provider-docker
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/management-cluster/workloads/dev
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cluster-prod
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  prune: true
+  dependsOn:
+    - name: capi-provider-docker
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/management-cluster/workloads/prod
