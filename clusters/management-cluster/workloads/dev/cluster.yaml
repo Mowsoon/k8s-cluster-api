@@ -6,6 +6,9 @@ metadata:
   name: cluster-dev
   namespace: env-dev
 spec:
+  controlPlaneEndpoint:
+    host: ""
+    port: 6443
   clusterNetwork:
     services:
       cidrBlocks: ["10.100.0.0/16"]
