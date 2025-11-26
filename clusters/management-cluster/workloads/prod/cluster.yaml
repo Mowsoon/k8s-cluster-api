@@ -44,7 +44,7 @@ spec:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
       kind: DockerMachineTemplate
-      name: cluster-dev-v2-md-0-v3 
+      name: cluster-prod-control-plane-v3
   kubeadmConfigSpec:
     clusterConfiguration:
       controllerManager:
@@ -64,16 +64,20 @@ spec:
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-dev-v2-md-0-v3 
+  name: cluster-prod-control-plane-v3
   namespace: env-prod
 spec:
   template:
-    spec: {}
+    spec:
+      extraMounts:
+        - containerPath: /lib/modules
+          hostPath: /lib/modules
+          readOnly: true
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
-  name: cluster-prod-workers
+  name: cluster-prod-workers-v3
   namespace: env-prod
 spec:
   clusterName: cluster-prod
@@ -92,25 +96,29 @@ spec:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
           kind: KubeadmConfigTemplate
-          name: cluster-prod-workers
+          name: cluster-prod-workers-v3
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: DockerMachineTemplate
-        name: cluster-dev-v2-md-0-v3 
+        name: cluster-prod-workers-v3
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-dev-v2-md-0-v3 
+  name: cluster-prod-workers-v3
   namespace: env-prod
 spec:
   template:
-    spec: {}
+    spec:
+      extraMounts:
+        - containerPath: /lib/modules
+          hostPath: /lib/modules
+          readOnly: true
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
-  name: cluster-prod-workers
+  name: cluster-prod-workers-v3
   namespace: env-prod
 spec:
   template:
