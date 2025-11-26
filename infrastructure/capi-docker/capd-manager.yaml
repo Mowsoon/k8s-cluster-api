@@ -3,6 +3,65 @@ kind: Namespace
 metadata:
   name: capd-system
 ---
+# 1. Le certificat
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: capd-selfsigned-issuer
+  namespace: capd-system
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: capd-serving-cert
+  namespace: capd-system
+spec:
+  dnsNames:
+  - capd-webhook-service.capd-system.svc
+  - capd-webhook-service.capd-system.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: capd-selfsigned-issuer
+  secretName: capd-webhook-service-cert
+  subject:
+    organizations:
+    - k8s.io
+---
+# 2. Les Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: capd-controller-manager-metrics-service
+  namespace: capd-system
+  labels:
+    cluster.x-k8s.io/provider: infrastructure-docker
+spec:
+  ports:
+  - name: https
+    port: 8443
+    targetPort: https
+  selector:
+    cluster.x-k8s.io/provider: infrastructure-docker
+    control-plane: controller-manager
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capd-webhook-service
+  namespace: capd-system
+  labels:
+    cluster.x-k8s.io/provider: infrastructure-docker
+spec:
+  ports:
+  - port: 443
+    targetPort: webhook-server
+  selector:
+    cluster.x-k8s.io/provider: infrastructure-docker
+    control-plane: controller-manager
+---
+# 3. Le Déploiement
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,8 +86,12 @@ spec:
       - args:
         - --leader-elect
         - --metrics-bind-addr=127.0.0.1:8080
+        - --webhook-port=9443
+        - --webhook-cert-dir=/tmp/k8s-webhook-server/serving-certs/
         image: gcr.io/k8s-staging-cluster-api/capd-manager:v1.6.0
         name: manager
+        securityContext:
+          privileged: true
         ports:
         - containerPort: 9443
           name: webhook-server
@@ -36,24 +99,15 @@ spec:
         volumeMounts:
         - mountPath: /var/run/docker.sock
           name: docker-sock
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
       volumes:
       - hostPath:
           path: /var/run/docker.sock
           type: Socket
         name: docker-sock
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: capd-controller-manager-metrics-service
-  namespace: capd-system
-  labels:
-    cluster.x-k8s.io/provider: infrastructure-docker
-spec:
-  ports:
-  - name: https
-    port: 8443
-    targetPort: https
-  selector:
-    cluster.x-k8s.io/provider: infrastructure-docker
-    control-plane: controller-manager
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: capd-webhook-service-cert
