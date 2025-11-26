@@ -1,0 +1,27 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infrastructure/cert-manager
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: capi-provider-docker
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  prune: true
+  dependsOn:
+    - name: cert-manager
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infrastructure/capi-docker
