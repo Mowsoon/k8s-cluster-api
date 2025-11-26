@@ -1,11 +1,12 @@
-# Cluster PROD : 3 Control Planes (HA), 2 Workers
-# Namespace : env-prod
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
   name: cluster-prod
   namespace: env-prod
 spec:
+  controlPlaneEndpoint:
+    host: ""
+    port: 6443
   clusterNetwork:
     services:
       cidrBlocks: ["10.200.0.0/16"]
@@ -34,7 +35,7 @@ metadata:
   namespace: env-prod
 spec:
   version: v1.28.0
-  replicas: 3 # Haute Disponibilité (simulée en Docker)
+  replicas: 3
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
@@ -68,7 +69,7 @@ metadata:
   namespace: env-prod
 spec:
   clusterName: cluster-prod
-  replicas: 2 # Plus de puissance
+  replicas: 2
   selector:
     matchLabels:
       cluster.x-k8s.io/cluster-name: cluster-prod
