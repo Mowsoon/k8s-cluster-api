@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # 1. Les composants CAPI Core (fichiers locaux que vous avez déjà)
+  - core-components.yaml
+  - bootstrap-components.yaml
+  - control-plane-components.yaml
+  
+  # 2. Le Manager Docker (fichier local qu'on vient de créer)
+  - capd-manager.yaml
+
+  # 3. Les CRDs Docker (Téléchargement direct depuis le repo officiel v1.6.0)
+  - https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/v1.6.0/test/infrastructure/docker/config/crd/bases/infrastructure.cluster.x-k8s.io_dockerclusters.yaml
+  - https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/v1.6.0/test/infrastructure/docker/config/crd/bases/infrastructure.cluster.x-k8s.io_dockermachines.yaml
+  - https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/v1.6.0/test/infrastructure/docker/config/crd/bases/infrastructure.cluster.x-k8s.io_dockermachinetemplates.yaml
+  - https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/v1.6.0/test/infrastructure/docker/config/crd/bases/infrastructure.cluster.x-k8s.io_dockermachinepools.yaml
