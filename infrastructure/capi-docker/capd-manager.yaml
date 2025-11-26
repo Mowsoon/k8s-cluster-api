@@ -110,4 +110,57 @@ spec:
       - name: cert
         secret:
           defaultMode: 420
-          secretName: capd-webhook-service-cert
+          secretName: capd-webhook-service-cert         
+---
+# 4. Les Rôles et RoleBindings
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: capd-leader-election-role
+  namespace: capd-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: capd-leader-election-rolebinding
+  namespace: capd-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: capd-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: capd-system
