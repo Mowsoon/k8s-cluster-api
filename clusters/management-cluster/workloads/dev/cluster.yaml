@@ -61,6 +61,7 @@ spec:
         ignorePreflightErrors:
           - SystemVerification
 ---
+# PLUS D'EXTRA MOUNTS ICI
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
@@ -68,11 +69,7 @@ metadata:
   namespace: env-dev
 spec:
   template:
-    spec:
-      extraMounts:
-        - containerPath: /lib/modules
-          hostPath: /lib/modules
-          readOnly: true
+    spec: {}
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -109,11 +106,7 @@ metadata:
   namespace: env-dev
 spec:
   template:
-    spec:
-      extraMounts:
-        - containerPath: /lib/modules
-          hostPath: /lib/modules
-          readOnly: true
+    spec: {}
 ---
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
