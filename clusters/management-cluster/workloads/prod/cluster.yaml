@@ -1,7 +1,7 @@
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: Cluster
 metadata:
-  name: cluster-prod-v2
+  name: cluster-prod-v3
   namespace: env-prod
 spec:
   controlPlaneEndpoint:
@@ -16,16 +16,16 @@ spec:
   infrastructureRef:
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     kind: DockerCluster
-    name: cluster-prod-v2
+    name: cluster-prod-v3
   controlPlaneRef:
     apiVersion: controlplane.cluster.x-k8s.io/v1beta1
     kind: KubeadmControlPlane
-    name: cluster-prod-v2
+    name: cluster-prod-v3
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerCluster
 metadata:
-  name: cluster-prod-v2
+  name: cluster-prod-v3
   namespace: env-prod
 spec:
   controlPlaneEndpoint:
@@ -35,7 +35,7 @@ spec:
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
 metadata:
-  name: cluster-prod-v2
+  name: cluster-prod-v3
   namespace: env-prod
 spec:
   version: v1.28.0
@@ -44,7 +44,7 @@ spec:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
       kind: DockerMachineTemplate
-      name: cluster-prod-v2-control-plane-v3 
+      name: cluster-prod-v3-control-plane-v3 
   kubeadmConfigSpec:
     clusterConfiguration:
       controllerManager:
@@ -64,7 +64,7 @@ spec:
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-prod-v2-control-plane-v3 
+  name: cluster-prod-v3-control-plane-v3 
   namespace: env-prod
 spec:
   template:
@@ -73,35 +73,35 @@ spec:
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
-  name: cluster-prod-v2-md-0
+  name: cluster-prod-v3-md-0
   namespace: env-prod
 spec:
-  clusterName: cluster-prod-v2
+  clusterName: cluster-prod-v3
   replicas: 2
   selector:
     matchLabels:
-      cluster.x-k8s.io/cluster-name: cluster-prod-v2
+      cluster.x-k8s.io/cluster-name: cluster-prod-v3
   template:
     metadata:
       labels:
-        cluster.x-k8s.io/cluster-name: cluster-prod-v2
+        cluster.x-k8s.io/cluster-name: cluster-prod-v3
     spec:
       version: v1.28.0
-      clusterName: cluster-prod-v2
+      clusterName: cluster-prod-v3
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
           kind: KubeadmConfigTemplate
-          name: cluster-prod-v2-md-0
+          name: cluster-prod-v3-md-0
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: DockerMachineTemplate
-        name: cluster-prod-v2-md-0-v3           
+        name: cluster-prod-v3-md-0-v3           
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: DockerMachineTemplate
 metadata:
-  name: cluster-prod-v2-md-0-v3                
+  name: cluster-prod-v3-md-0-v3                
   namespace: env-prod
 spec:
   template:
@@ -110,7 +110,7 @@ spec:
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
-  name: cluster-prod-v2-md-0
+  name: cluster-prod-v3-md-0
   namespace: env-prod
 spec:
   template:
